@@ -1,0 +1,33 @@
+/* Light mode styles */
+.light-mode {
+  background-color: white;
+  color: black;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark mode styles */
+.dark-mode {
+  background-color: black;
+  color: white;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Style for the toggle button */
+.dark-mode-toggle {
+  background-color: transparent;
+  border: 1px solid;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  color: inherit;
+  transition: color 0.3s ease;
+}
+
+/* Optional: Make the button look better on dark mode */
+.dark-mode .dark-mode-toggle {
+  color: white;
+}
+
+.light-mode .dark-mode-toggle {
+  color: black;
+}
