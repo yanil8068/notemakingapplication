@@ -31,9 +31,10 @@ app.get("/", (req, res) => {
 
 const PORT = process.env.PORT || 8000;
 
-app.listen(PORT, () => {
-  connectDB();
-  console.log(`Server is listening on port ${PORT}`);
-});
+// app.listen(PORT, () => {
+//   connectDB();
+//   console.log(`Server is listening on port ${PORT}`);
+// });
+connectDB();
 
 export default app;
