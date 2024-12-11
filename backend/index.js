@@ -3,9 +3,9 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 
-import userRouter from "../src/routes/user.routes.js";
-import noteRouter from "../src/routes/note.routes.js";
-import connectDB from "../src/config/db.js";
+import userRouter from "./src/routes/user.routes.js";
+import noteRouter from "./src/routes/note.routes.js";
+import connectDB from "./src/config/db.js";
 import helmet from "helmet"; // Import Helmet
 
 import cookieParser from "cookie-parser";
