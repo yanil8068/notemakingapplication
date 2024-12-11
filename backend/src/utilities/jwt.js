@@ -1,4 +1,6 @@
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config(); // Load environment variables from the .env file
 
 // Function to create a JSON Web Token
 const createToken = (data) => {
