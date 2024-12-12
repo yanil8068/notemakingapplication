@@ -1,334 +1,3 @@
-// import React, { useEffect, useState } from "react";
-// import axios from "axios";
-// import { useAuth } from "../context/AuthContext";
-// import Cookies from "js-cookie";
-// import { useNavigate } from "react-router-dom";
-
-// const Dashboard = () => {
-//   const { user, logout, login } = useAuth();
-//   const navigate = useNavigate();
-
-//   const token = Cookies.get("Note") || null; // Retrieve token from cookies
-//   console.log("token", token);
-
-//   useEffect(() => {
-//     if (token && !user) {
-//       axios
-//         .get(`http://localhost:8000/api/user/me`, {
-//           headers: { Authorization: `Bearer ${token}` },
-//         })
-//         .then((response) => {
-//           console.log("user", response.data.user);
-//           login(response.data.user); // Save user data in context
-//           // Fetch and initialize cart after successful login
-//         })
-//         .catch((error) => {
-//           console.error("Error fetching user data:", error);
-//           // Clear token if invalid
-//           Cookies.remove("Note");
-//         });
-//     }
-//   }, [user, token]);
-
-//   console.log("user", user);
-
-//   const [notes, setNotes] = useState([]);
-//   const [noteData, setNoteData] = useState({
-//     title: "",
-//     content: "",
-//     category: "Work",
-//   });
-//   const [editMode, setEditMode] = useState(false);
-//   const [editNoteId, setEditNoteId] = useState(null);
-
-//   // Fetch all notes for the user
-//   useEffect(() => {
-//     const fetchNotes = async () => {
-//       try {
-//         const response = await axios.get(
-//           "http://localhost:8000/api/note/getallnotes",
-//           {
-//             headers: { Authorization: `Bearer ${token}` },
-//           }
-//         );
-//         console.log(response);
-//         setNotes(response.data);
-//       } catch (error) {
-//         console.error("Error fetching notes:", error);
-//       }
-//     };
-
-//     fetchNotes();
-//   }, [user]);
-//   console.log("notes", notes);
-
-//   //logout
-//   async function handleSignOut() {
-//     try {
-//       await axios.post(`http://localhost:8000/api/user/logout`); // Call your logout API
-//       Cookies.remove("Note"); // Remove cookie
-
-//       logout();
-//       navigate("/");
-//     } catch (error) {
-//       console.error("Error logging out", error);
-//     }
-//   }
-//   async function profile() {
-//     navigate("/profile");
-//   }
-
-//   const handleChange = (e) => {
-//     const { name, value } = e.target;
-//     setNoteData({ ...noteData, [name]: value });
-//   };
-
-//   const handleEditClick = (note) => {
-//     setEditMode(true);
-//     setEditNoteId(note._id);
-//     setNoteData({
-//       title: note.title,
-//       content: note.content,
-//       category: note.category,
-//     });
-//   };
-
-//   const handleUpdateNote = async (e) => {
-//     e.preventDefault();
-//     try {
-//       const response = await axios.post(
-//         `http://localhost:8000/api/note/update/${editNoteId}`,
-//         noteData,
-//         { headers: { Authorization: `Bearer ${token}` } }
-//       );
-
-//       const fetchNotes = async () => {
-//         try {
-//           const response = await axios.get(
-//             "http://localhost:8000/api/note/getallnotes",
-//             {
-//               headers: { Authorization: `Bearer ${token}` },
-//             }
-//           );
-//           console.log(response);
-//           setNotes(response.data);
-//         } catch (error) {
-//           console.error("Error fetching notes:", error);
-//         }
-//       };
-
-//       fetchNotes();
-
-//       setEditMode(false);
-//       setEditNoteId(null);
-//       setNoteData({ title: "", content: "", category: "Work" });
-//     } catch (error) {
-//       console.error("Error updating note:", error);
-//     }
-//   };
-
-//   const handleAddNote = async (e) => {
-//     e.preventDefault();
-//     try {
-//       const response = await axios.post(
-//         `http://localhost:8000/api/note/add`,
-//         noteData,
-//         { headers: { Authorization: `Bearer ${token}` } }
-//       );
-
-//       const fetchNotes = async () => {
-//         try {
-//           const response = await axios.get(
-//             "http://localhost:8000/api/note/getallnotes",
-//             {
-//               headers: { Authorization: `Bearer ${token}` },
-//             }
-//           );
-//           console.log(response);
-//           setNotes(response.data);
-//         } catch (error) {
-//           console.error("Error fetching notes:", error);
-//         }
-//       };
-
-//       fetchNotes();
-
-//       setEditMode(false);
-//       setEditNoteId(null);
-//       setNoteData({ title: "", content: "", category: "Work" });
-//     } catch (error) {
-//       console.error("Error updating note:", error);
-//     }
-//   };
-
-//   const handleDeleteNote = async (id) => {
-//     if (window.confirm("Are you sure you want to delete this note?")) {
-//       try {
-//         const response = await axios.delete(
-//           `http://localhost:8000/api/note/delete/${id}`,
-//           {
-//             headers: { Authorization: `Bearer ${token}` },
-//           }
-//         );
-//         const fetchNotes = async () => {
-//           try {
-//             const response = await axios.get(
-//               "http://localhost:8000/api/note/getallnotes",
-//               {
-//                 headers: { Authorization: `Bearer ${token}` },
-//               }
-//             );
-//             console.log(response);
-//             setNotes(response.data);
-//           } catch (error) {
-//             console.error("Error fetching notes:", error);
-//           }
-//         };
-//         fetchNotes();
-//       } catch (error) {
-//         console.error("Error deleting note:", error);
-//       }
-//     }
-//   };
-
-//   return (
-//     // <div>
-//     //   Dashboard
-//     //   <hr />
-//     //   <form onSubmit={editMode ? handleUpdateNote : handleAddNote}>
-//     //     <input
-//     //       type="text"
-//     //       name="title"
-//     //       placeholder="Title"
-//     //       value={noteData.title}
-//     //       onChange={handleChange}
-//     //       required
-//     //     />
-//     //     <textarea
-//     //       name="content"
-//     //       placeholder="Content"
-//     //       value={noteData.content}
-//     //       onChange={handleChange}
-//     //       required
-//     //     />
-//     //     <select
-//     //       name="category"
-//     //       value={noteData.category}
-//     //       onChange={handleChange}
-//     //       required
-//     //     >
-//     //       <option value="Work">Work</option>
-//     //       <option value="Personal">Personal</option>
-//     //       <option value="Other">Other</option>
-//     //     </select>
-
-//     //     <button type="submit">{editMode ? "Update Note" : "Add Note"}</button>
-//     //   </form>
-//     //   <button onClick={handleSignOut}>Logout</button>
-//     //   <button onClick={profile}>Profile</button>
-//     //   <hr />
-//     //   <ul>
-//     //     {notes?.map((note) => (
-//     //       <li key={note._id}>
-//     //         <h3>{note.title}</h3>
-//     //         <p>{note.content}</p>
-//     //         <p>Category: {note.category}</p>
-//     //         <button onClick={() => handleEditClick(note)}>Edit</button>
-//     //         <button onClick={() => handleDeleteNote(note._id)}>Delete</button>
-//     //       </li>
-//     //     ))}
-//     //   </ul>
-//     // </div>
-//     <div className="container my-3 border rounded shadow-lg">
-//       <div className="d-flex justify-content-between mb-4">
-//         <button className="btn btn-secondary mt-2" onClick={handleSignOut}>
-//           Logout
-//         </button>
-//         <h1 className="text-center mb-1 text-success mt-2">Dashboard</h1>
-//         <button className="btn btn-info mt-2" onClick={profile}>
-//           Profile
-//         </button>
-//       </div>
-//       <h4 className="text-left mb-4 text-danger">Add a Note</h4>
-//       <hr className="text-danger" />
-//       <form
-//         className="mb-2"
-//         onSubmit={editMode ? handleUpdateNote : handleAddNote}
-//       >
-//         <div className="mb-3">
-//           <input
-//             type="text"
-//             name="title"
-//             placeholder="Title"
-//             value={noteData.title}
-//             onChange={handleChange}
-//             required
-//             className="form-control"
-//           />
-//         </div>
-//         <div className="mb-3">
-//           <textarea
-//             name="content"
-//             placeholder="Content"
-//             value={noteData.content}
-//             onChange={handleChange}
-//             required
-//             className="form-control"
-//           />
-//         </div>
-//         <div className="mb-3">
-//           <select
-//             name="category"
-//             value={noteData.category}
-//             onChange={handleChange}
-//             required
-//             className="form-select"
-//           >
-//             <option value="Work">Work</option>
-//             <option value="Personal">Personal</option>
-//             <option value="Other">Other</option>
-//           </select>
-//         </div>
-//         <button type="submit" className="btn btn-primary w-100">
-//           {editMode ? "Update Note" : "Add Note"}
-//         </button>
-//       </form>
-
-//       <div className="row">
-//         <h3 className="text-left mb-4 text-danger">Existing Notes</h3>
-//         <hr />
-//         {notes?.map((note) => (
-//           <div className="col-md-4 mb-4" key={note._id}>
-//             <div className="card h-100 shadow">
-//               <div className="card-body">
-//                 <h5 className="card-title">{note.title}</h5>
-//                 <p className="card-text">{note.content}</p>
-//                 <p className="card-text">
-//                   <strong>Category:</strong> {note.category}
-//                 </p>
-//                 <button
-//                   className="btn btn-warning me-2"
-//                   onClick={() => handleEditClick(note)}
-//                 >
-//                   Edit
-//                 </button>
-//                 <button
-//                   className="btn btn-danger"
-//                   onClick={() => handleDeleteNote(note._id)}
-//                 >
-//                   Delete
-//                 </button>
-//               </div>
-//             </div>
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Dashboard;
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
@@ -346,7 +15,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (token && !user) {
       axios
-        .get(`http://localhost:8000/api/user/me`, {
+        .get(`${import.meta.env.VITE_BACKEND_URL}api/user/me`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((response) => {
@@ -378,7 +47,7 @@ const Dashboard = () => {
     const fetchNotes = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8000/api/note/getallnotes",
+          `${import.meta.env.VITE_BACKEND_URL}api/note/getallnotes`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -413,7 +82,7 @@ const Dashboard = () => {
   // Logout function
   async function handleSignOut() {
     try {
-      await axios.post(`http://localhost:8000/api/user/logout`); // Call your logout API
+      await axios.post(`${import.meta.env.VITE_BACKEND_URL}api/user/logout`); // Call your logout API
       Cookies.remove("Note"); // Remove cookie
       logout();
       navigate("/");
@@ -445,7 +114,7 @@ const Dashboard = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/note/update/${editNoteId}`,
+        `${import.meta.env.VITE_BACKEND_URL}api/note/update/${editNoteId}`,
         noteData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -453,7 +122,7 @@ const Dashboard = () => {
       const fetchNotes = async () => {
         try {
           const response = await axios.get(
-            "http://localhost:8000/api/note/getallnotes",
+            `${import.meta.env.VITE_BACKEND_URL}api/note/getallnotes`,
             {
               headers: { Authorization: `Bearer ${token}` },
             }
@@ -478,7 +147,7 @@ const Dashboard = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/note/add`,
+        `${import.meta.env.VITE_BACKEND_URL}api/note/add`,
         noteData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -486,7 +155,7 @@ const Dashboard = () => {
       const fetchNotes = async () => {
         try {
           const response = await axios.get(
-            "http://localhost:8000/api/note/getallnotes",
+            `${import.meta.env.VITE_BACKEND_URL}api/note/getallnotes`,
             {
               headers: { Authorization: `Bearer ${token}` },
             }
@@ -510,14 +179,17 @@ const Dashboard = () => {
   const handleDeleteNote = async (id) => {
     if (window.confirm("Are you sure you want to delete this note?")) {
       try {
-        await axios.delete(`http://localhost:8000/api/note/delete/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        await axios.delete(
+          `${import.meta.env.VITE_BACKEND_URL}api/note/delete/${id}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
 
         const fetchNotes = async () => {
           try {
             const response = await axios.get(
-              "http://localhost:8000/api/note/getallnotes",
+              `${import.meta.env.VITE_BACKEND_URL}api/note/getallnotes`,
               {
                 headers: { Authorization: `Bearer ${token}` },
               }
@@ -656,31 +328,35 @@ const Dashboard = () => {
       <div className="row border border-success rounded">
         <h5 className="text-left mb-4 text-danger">Existing Notes</h5>
         <hr />
-        {filteredNotes?.map((note) => (
-          <div className="col-md-4 mb-4" key={note._id}>
-            <div className="card h-100 shadow">
-              <div className="card-body">
-                <h5 className="card-title">{note.title}</h5>
-                <p className="card-text">{note.content}</p>
-                <p className="card-text">
-                  <strong>Category:</strong> {note.category}
-                </p>
-                <button
-                  className="btn btn-warning me-2"
-                  onClick={() => handleEditClick(note)}
-                >
-                  Edit
-                </button>
-                <button
-                  className="btn btn-danger"
-                  onClick={() => handleDeleteNote(note._id)}
-                >
-                  Delete
-                </button>
+        {filteredNotes.length > 0 ? (
+          filteredNotes?.map((note) => (
+            <div className="col-md-4 mb-4" key={note._id}>
+              <div className="card h-100 shadow">
+                <div className="card-body">
+                  <h5 className="card-title">{note.title}</h5>
+                  <p className="card-text">{note.content}</p>
+                  <p className="card-text">
+                    <strong>Category:</strong> {note.category}
+                  </p>
+                  <button
+                    className="btn btn-warning me-2"
+                    onClick={() => handleEditClick(note)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => handleDeleteNote(note._id)}
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <p className="text-center text-muted">No notes found.</p>
+        )}
       </div>
     </div>
   );

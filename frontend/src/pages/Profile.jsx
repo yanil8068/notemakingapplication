@@ -1,74 +1,3 @@
-// import React, { useState, useEffect } from "react";
-// import axios from "axios";
-// import { useNavigate } from "react-router-dom";
-// import { useAuth } from "../context/AuthContext";
-// import Cookies from "js-cookie";
-
-// const Profile = () => {
-//   const { user, logout, login } = useAuth();
-//   const navigate = useNavigate();
-
-//   const token = Cookies.get("Note") || null; // Retrieve token from cookies
-//   console.log("token", token);
-
-//   useEffect(() => {
-//     if (token && !user) {
-//       axios
-//         .get(`http://localhost:8000/api/user/me`, {
-//           headers: { Authorization: `Bearer ${token}` },
-//         })
-//         .then((response) => {
-//           console.log("user", response.data.user);
-//           login(response.data.user); // Save user data in context
-//           // Fetch and initialize cart after successful login
-//         })
-//         .catch((error) => {
-//           console.error("Error fetching user data:", error);
-//           // Clear token if invalid
-//           Cookies.remove("Note");
-//         });
-//     }
-//   }, [user, token]);
-
-//   console.log("user", user);
-
-//   async function handleSignOut() {
-//     try {
-//       await axios.post(`http://localhost:8000/api/user/logout`); // Call your logout API
-//       Cookies.remove("Note"); // Remove cookie
-
-//       logout();
-//       navigate("/");
-//     } catch (error) {
-//       console.error("Error logging out", error);
-//     }
-//   }
-
-//   async function dashboard() {
-//     navigate("/dashboard");
-//   }
-
-//   return (
-//     <div>
-//       Profile
-//       <hr />
-//       <button onClick={dashboard}>dashboard</button>
-//       <hr />
-//       {user ? (
-//         <>
-//           <div>Email: {user?.email}</div>
-//           <div>name: {user?.name}</div>
-//         </>
-//       ) : (
-//         <></>
-//       )}
-//       <button onClick={handleSignOut}>Logout</button>
-//     </div>
-//   );
-// };
-
-// export default Profile;
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -91,7 +20,7 @@ const Profile = () => {
   useEffect(() => {
     if (token && !user) {
       axios
-        .get(`http://localhost:8000/api/user/me`, {
+        .get(`${import.meta.env.VITE_BACKEND_URL}api/user/me`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((response) => {
@@ -127,7 +56,7 @@ const Profile = () => {
     e.preventDefault();
     try {
       const response = await axios.patch(
-        `http://localhost:8000/api/user/${user._id}/update`,
+        `${import.meta.env.VITE_BACKEND_URL}api/user/${user._id}/update`,
         profileData,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -136,7 +65,7 @@ const Profile = () => {
       console.log("Profile updated:", response.data);
       setEditMode(false); // Exit edit mode
       axios
-        .get(`http://localhost:8000/api/user/me`, {
+        .get(`${import.meta.env.VITE_BACKEND_URL}api/user/me`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((response) => {
@@ -154,7 +83,7 @@ const Profile = () => {
 
   async function handleSignOut() {
     try {
-      await axios.post(`http://localhost:8000/api/user/logout`); // Call your logout API
+      await axios.post(`${import.meta.env.VITE_BACKEND_URL}api/user/logout`); // Call your logout API
       Cookies.remove("Note"); // Remove cookie
       logout();
       navigate("/");
@@ -168,57 +97,6 @@ const Profile = () => {
   }
 
   return (
-    // <div>
-    //   <h1>Profile</h1>
-    //   <button onClick={dashboard}>Go to Dashboard</button>
-    //   <hr />
-
-    //   {editMode ? (
-    //     <form onSubmit={handleSaveProfile}>
-    //       <div>
-    //         <label>Name: </label>
-    //         <input
-    //           type="text"
-    //           name="name"
-    //           value={profileData.name}
-    //           onChange={handleInputChange}
-    //           required
-    //         />
-    //       </div>
-    //       <div>
-    //         <label>Email: </label>
-    //         <input
-    //           type="email"
-    //           name="email"
-    //           value={profileData.email}
-    //           onChange={handleInputChange}
-    //           required
-    //         />
-    //       </div>
-    //       <button type="submit">Save</button>
-    //       <button type="button" onClick={() => setEditMode(false)}>
-    //         Cancel
-    //       </button>
-    //     </form>
-    //   ) : (
-    //     <>
-    //       {user ? (
-    //         <>
-    //           <div>
-    //             <strong>Email:</strong> {user?.email}
-    //           </div>
-    //           <div>
-    //             <strong>Name:</strong> {user?.name}
-    //           </div>
-    //         </>
-    //       ) : (
-    //         <p>Loading user information...</p>
-    //       )}
-    //       <button onClick={handleEdit}>Edit Profile</button>
-    //     </>
-    //   )}
-    //   <button onClick={handleSignOut}>Logout</button>
-    // </div>
     <div className="container mt-2 vh-100 ">
       <div className="border rounded border-success shadow-lg p-2">
         <div className="d-flex justify-content-between mb-2">

@@ -18,7 +18,7 @@ const Login = () => {
       if (mode === "login") {
         // Login flow
         const response = await axios.post(
-          "http://localhost:8000/api/user/login",
+          `${import.meta.env.VITE_BACKEND_URL}api/user/login`,
           {
             email,
             password,
@@ -31,7 +31,7 @@ const Login = () => {
         });
 
         axios
-          .get(`http://localhost:8000/api/user/me`, {
+          .get(`${import.meta.env.VITE_BACKEND_URL}api/user/me`, {
             headers: { Authorization: `Bearer ${response.data.token}` },
           })
           .then((response) => {
@@ -47,7 +47,7 @@ const Login = () => {
       } else {
         // Signup flow
         const response = await axios.post(
-          "http://localhost:8000/api/user/register",
+          `${import.meta.env.VITE_BACKEND_URL}api/user/register`,
           {
             name,
             email,
@@ -64,46 +64,6 @@ const Login = () => {
   };
   return (
     <>
-      {/* {" "}
-      <form onSubmit={handleLogin}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        {mode === "login" ? (
-          <></>
-        ) : (
-          <input
-            type="text"
-            placeholder="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-        )}
-        <button type="submit">{mode === "login" ? "Login" : "Register"}</button>
-      </form>
-      <p>
-        {mode === "login"
-          ? "Don't have an account? "
-          : "Already have an account? "}
-        <button
-          type="button"
-          onClick={() => setMode(mode === "login" ? "signup" : "login")}
-        >
-          {mode === "login" ? "Sign Up" : "Login"}
-        </button>
-      </p> */}
       <div className="d-flex justify-content-center align-items-center vh-100 ">
         <div
           className="card shadow-sm p-4"
